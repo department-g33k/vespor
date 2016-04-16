@@ -103,16 +103,20 @@ function enableTouch(objname) {
 }
 
 var websock;
+var WebSockOpen=0;  //0=close,1=opening,2=open
 
 function start() {
   websock = new WebSocket('ws://' + window.location.hostname + ':81/');
+  WebSockOpen=1;
   websock.onopen = function(evt) {
     console.log('websock open');
+    WebSockOpen=2;
     var e = document.getElementById('webSockStatus');
     e.style.backgroundColor = 'green';
   };
   websock.onclose = function(evt) {
     console.log('websock close');
+    WebSockOpen=0;
     var e = document.getElementById('webSockStatus');
     e.style.backgroundColor = 'red';
   };
@@ -158,10 +162,32 @@ function start() {
   }
 }
 function buttondown(e) {
-  websock.send(e.id + '=1');
+  switch (WebSockOpen) {
+    case 0:
+      window.location.reload();
+      WebSockOpen=1;
+      break;
+    case 1:
+    default:
+      break;
+    case 2:
+      websock.send(e.id + '=1');
+      break;
+  }
 }
 function buttonup(e) {
-  websock.send(e.id + '=0');
+  switch (WebSockOpen) {
+    case 0:
+      window.location.reload();
+      WebSockOpen=1;
+      break;
+    case 1:
+    default:
+      break;
+    case 2:
+      websock.send(e.id + '=0');
+      break;
+  }
 }
 </script>
 </head>
