@@ -37,7 +37,9 @@ static const char AP_PASS[] = "GoVespor";
   int M1 = 5;  //Motor 2 Direction
   int E1 = 4;  //Motor 2 Speed
   int E2 = 14; //Motor 1 Speed                     
-  int M2 = 12; //Motor 1 Direction  
+  int M2 = 12; //Motor 1 Direction
+
+  int Speed = 1023;
 
 static const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 128, 1);
@@ -307,56 +309,56 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       else if (strcmp((const char *)payload, "bForward=1") == 0) {
         Serial.println(F("Forward"));
     digitalWrite(M1,HIGH);   
-    digitalWrite(M2, HIGH);       
-    analogWrite(E1, 255);   //PWM Speed Control
-    analogWrite(E2, 255);   //PWM Speed Control
+    digitalWrite(M2, LOW);       
+    analogWrite(E1, Speed);   //PWM Speed Control
+    analogWrite(E2, Speed);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bForward=0") == 0) {
         Serial.println(F("Stop"));
     digitalWrite(M1,HIGH);   
-    digitalWrite(M2, HIGH);       
+    digitalWrite(M2, LOW);       
     analogWrite(E1, 0);   //PWM Speed Control
     analogWrite(E2, 0);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bBackward=1") == 0) {
         Serial.println(F("Backward"));
     digitalWrite(M1,LOW);   
-    digitalWrite(M2, LOW);       
-    analogWrite(E1, 255);   //PWM Speed Control
-    analogWrite(E2, 255);   //PWM Speed Control
+    digitalWrite(M2, HIGH);       
+    analogWrite(E1, Speed);   //PWM Speed Control
+    analogWrite(E2, Speed);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bBackward=0") == 0) {
-        Serial.println(F("Stop"));
-    digitalWrite(M1,LOW);   
-    digitalWrite(M2, LOW);       
-    analogWrite(E1, 0);   //PWM Speed Control
-    analogWrite(E2, 0);   //PWM Speed Control;
-      }
-      else if (strcmp((const char *)payload, "bLeft=1") == 0) {
-        Serial.println(F("Left"));
-    digitalWrite(M1,LOW);   
-    digitalWrite(M2, HIGH);       
-    analogWrite(E1, 255);   //PWM Speed Control
-    analogWrite(E2, 255);   //PWM Speed Control
-      }
-      else if (strcmp((const char *)payload, "bLeft=0") == 0) {
         Serial.println(F("Stop"));
     digitalWrite(M1,LOW);   
     digitalWrite(M2, HIGH);       
     analogWrite(E1, 0);   //PWM Speed Control
     analogWrite(E2, 0);   //PWM Speed Control
       }
+      else if (strcmp((const char *)payload, "bLeft=1") == 0) {
+        Serial.println(F("Left"));
+    digitalWrite(M1,LOW);   
+    digitalWrite(M2, LOW);       
+    analogWrite(E1, Speed);   //PWM Speed Control
+    analogWrite(E2, Speed);   //PWM Speed Control
+      }
+      else if (strcmp((const char *)payload, "bLeft=0") == 0) {
+        Serial.println(F("Stop"));
+    digitalWrite(M1,LOW);   
+    digitalWrite(M2, LOW);       
+    analogWrite(E1, 0);   //PWM Speed Control
+    analogWrite(E2, 0);   //PWM Speed Control;
+      }
       else if (strcmp((const char *)payload, "bRight=1") == 0) {
         Serial.println(F("Right"));
     digitalWrite(M1,HIGH);   
-    digitalWrite(M2, LOW);       
-    analogWrite(E1, 255);   //PWM Speed Control
-    analogWrite(E2, 255);   //PWM Speed Control
+    digitalWrite(M2, HIGH);       
+    analogWrite(E1, Speed);   //PWM Speed Control
+    analogWrite(E2, Speed);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bRight=0") == 0) {
         Serial.println(F("Stop"));
     digitalWrite(M1,HIGH);   
-    digitalWrite(M2, LOW);       
+    digitalWrite(M2, HIGH);       
     analogWrite(E1, 0);   //PWM Speed Control
     analogWrite(E2, 0);   //PWM Speed Control
       }
