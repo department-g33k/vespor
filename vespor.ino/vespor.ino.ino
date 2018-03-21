@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include <ESP8266WiFi.h>
 #include <WebSocketsServer.h>
-#include <Hash.h>
+#include <Hash.h>A
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 
@@ -32,6 +32,12 @@ SOFTWARE.
 // rover in AP.
 static const char AP_SSID[] = "Vespor ROV";
 static const char AP_PASS[] = "GoVespor";
+
+  // Initialize the motors
+  int M1 = 5;  //Motor 2 Direction
+  int E1 = 4;  //Motor 2 Speed
+  int E2 = 14; //Motor 1 Speed                     
+  int M2 = 12; //Motor 1 Direction  
 
 static const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 128, 1);
@@ -52,17 +58,15 @@ const uint8_t PixelPin = 2;  // ignored when using DMA or UART methods
 NeoPixelBus<NeoGrbFeature, NeoEsp8266Uart800KbpsMethod> strip(PixelCount, PixelPin);
 
 #include <Wire.h>
-#include <Adafruit_MotorShield.h>
-#include <utility/Adafruit_MS_PWMServoDriver.h>
 
 // Create the motor shield object with the default I2C address
-Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+//Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // Or, create it with a different I2C address (say for stacking)
 // Adafruit_MotorShield AFMS = Adafruit_MotorShield(0x61);
 
 // Select which 'port' M1, M2, M3 or M4.
-Adafruit_DCMotor *leftMotor  = AFMS.getMotor(3);
-Adafruit_DCMotor *rightMotor = AFMS.getMotor(4);
+//Adafruit_DCMotor *leftMotor  = AFMS.getMotor(3);
+//Adafruit_DCMotor *rightMotor = AFMS.getMotor(4);
 
 // This string holds HTML, CSS, and Javascript for the Web UI.
 // The browser must support HTML5 WebSockets.
@@ -302,43 +306,59 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       }
       else if (strcmp((const char *)payload, "bForward=1") == 0) {
         Serial.println(F("Forward"));
-        leftMotor->run(FORWARD);
-        rightMotor->run(FORWARD);
+    digitalWrite(M1,HIGH);   
+    digitalWrite(M2, HIGH);       
+    analogWrite(E1, 255);   //PWM Speed Control
+    analogWrite(E2, 255);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bForward=0") == 0) {
         Serial.println(F("Stop"));
-        leftMotor->run(RELEASE);
-        rightMotor->run(RELEASE);
+    digitalWrite(M1,HIGH);   
+    digitalWrite(M2, HIGH);       
+    analogWrite(E1, 0);   //PWM Speed Control
+    analogWrite(E2, 0);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bBackward=1") == 0) {
         Serial.println(F("Backward"));
-        leftMotor->run(BACKWARD);
-        rightMotor->run(BACKWARD);
+    digitalWrite(M1,LOW);   
+    digitalWrite(M2, LOW);       
+    analogWrite(E1, 255);   //PWM Speed Control
+    analogWrite(E2, 255);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bBackward=0") == 0) {
         Serial.println(F("Stop"));
-        leftMotor->run(RELEASE);
-        rightMotor->run(RELEASE);
+    digitalWrite(M1,LOW);   
+    digitalWrite(M2, LOW);       
+    analogWrite(E1, 0);   //PWM Speed Control
+    analogWrite(E2, 0);   //PWM Speed Control;
       }
       else if (strcmp((const char *)payload, "bLeft=1") == 0) {
         Serial.println(F("Left"));
-        leftMotor->run(FORWARD);
-        rightMotor->run(BACKWARD);
+    digitalWrite(M1,LOW);   
+    digitalWrite(M2, HIGH);       
+    analogWrite(E1, 255);   //PWM Speed Control
+    analogWrite(E2, 255);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bLeft=0") == 0) {
         Serial.println(F("Stop"));
-        leftMotor->run(RELEASE);
-        rightMotor->run(RELEASE);
+    digitalWrite(M1,LOW);   
+    digitalWrite(M2, HIGH);       
+    analogWrite(E1, 0);   //PWM Speed Control
+    analogWrite(E2, 0);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bRight=1") == 0) {
         Serial.println(F("Right"));
-        leftMotor->run(BACKWARD);
-        rightMotor->run(FORWARD);
+    digitalWrite(M1,HIGH);   
+    digitalWrite(M2, LOW);       
+    analogWrite(E1, 255);   //PWM Speed Control
+    analogWrite(E2, 255);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bRight=0") == 0) {
         Serial.println(F("Stop"));
-        leftMotor->run(RELEASE);
-        rightMotor->run(RELEASE);
+    digitalWrite(M1,HIGH);   
+    digitalWrite(M2, LOW);       
+    analogWrite(E1, 0);   //PWM Speed Control
+    analogWrite(E2, 0);   //PWM Speed Control
       }
       else {
         Serial.printf("Unknown command %s\r\n", payload);
@@ -371,15 +391,16 @@ void setup() {
   strip.Begin();
   strip.Show();
 
-  // Initialize the motors
-  AFMS.begin();  // create with the default frequency 1.6KHz
 
-  leftMotor->setSpeed(150);
-  leftMotor->run(RELEASE);
 
-  rightMotor->setSpeed(150);
-  rightMotor->run(RELEASE);
+pinMode(M1, OUTPUT);
+pinMode(M2, OUTPUT);
 
+    digitalWrite(M1,HIGH);   
+    digitalWrite(M2, HIGH);       
+    analogWrite(E1, 0);   //PWM Speed Control
+    analogWrite(E2, 0);   //PWM Speed Control
+  
   // Start up AP mode
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
