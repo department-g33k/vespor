@@ -37,8 +37,7 @@ static const char AP_PASS[] = "GoVespor";
   int M1 = 5;  //Motor 2 Direction
   int E1 = 4;  //Motor 2 Speed
   int E2 = 14; //Motor 1 Speed                     
-  int M2 = 12; //Motor 1 Direction
-
+  int M2 = 12; //Motor 1 Direction  
   int Speed = 1023;
 
 static const byte DNS_PORT = 53;
@@ -332,7 +331,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     digitalWrite(M1,LOW);   
     digitalWrite(M2, HIGH);       
     analogWrite(E1, 0);   //PWM Speed Control
-    analogWrite(E2, 0);   //PWM Speed Control
+    analogWrite(E2, 0);   //PWM Speed Control;
       }
       else if (strcmp((const char *)payload, "bLeft=1") == 0) {
         Serial.println(F("Left"));
@@ -346,7 +345,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     digitalWrite(M1,LOW);   
     digitalWrite(M2, LOW);       
     analogWrite(E1, 0);   //PWM Speed Control
-    analogWrite(E2, 0);   //PWM Speed Control;
+    analogWrite(E2, 0);   //PWM Speed Control
       }
       else if (strcmp((const char *)payload, "bRight=1") == 0) {
         Serial.println(F("Right"));
